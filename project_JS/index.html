@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Cash Calculator</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        
+        } 
+        .currency-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+        .currency-table td, .currency-table th {
+            border: 1px solid darkslategray;
+            padding: 8px;
+            text-align: center;
+        }
+        .currency-table th {
+            background-color: darkslategray;
+            color: white;
+        }
+        .currency-input {
+            width: 50px;
+            text-align: center;
+        }
+        .result {
+            background-color: darkslategray;
+            padding: 10px;
+            border: 1px solid darkslategray;
+            margin-top: 20px;
+            color: white;
+        }
+        .result p {
+            margin: 5px 0;
+        }
+    </style>
+</head>
+<body>
+    <center><h1>Cash Calculator</h1></center>
+    <table class="currency-table">
+        <tr>
+            <th>Note</th>
+            <th>Quantity</th>
+            <th>Total</th>
+        </tr>
+        <tr>
+            <td><img src="https://paisaboltahai.rbi.org.in/images/2000-note-front.png" alt="2000 INR" height="100px" width="300px"></td>
+            <td><input type="number" id="note-2000" class="currency-input" value="0" oninput="calculateTotal()"></td>
+            <td><span id="amount-2000">4000</span></td>
+        </tr>
+        <tr>
+            <td><img src="https://en.numista.com/catalogue/photos/inde/5e962341418414.30464708-original.jpg" alt="500 INR" height="100px" width="300px"></td>
+            <td><input type="number" id="note-500" class="currency-input" value="0" oninput="calculateTotal()"></td>
+            <td><span id="amount-500">1000</span></td>
+        </tr>
+        <tr>
+            <td><img src="https://paisaboltahai.rbi.org.in/images/Rs200/200-note-front.png  " alt="200 INR" height="100px" width="300px"></td>
+            <td><input type="number" id="note-200" class="currency-input" value="0" oninput="calculateTotal()"></td>
+            <td><span id="amount-200">600</span></td>
+        </tr>
+        <tr>
+            <td><img src="https://upload.wikimedia.org/wikipedia/en/thumb/3/3f/India_Hundred_Rupees_note.jpg/1200px-India_Hundred_Rupees_note.jpg" alt="100 INR" height="100px" width="300px"></td>
+            <td><input type="number" id="note-100" class="currency-input" value="0" oninput="calculateTotal()"></td>
+            <td><span id="amount-100">0</span></td>
+        </tr>
+        <tr>
+            <td><img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSf753K8OzeJMTIFklAgu4x8AzJ1e38tgiz2-4-0j0IkQ&s" alt="50 INR" height="100px" width="300px"></td>
+            <td><input type="number" id="note-50" class="currency-input" value="0" oninput="calculateTotal()"></td>
+            <td><span id="amount-50">0</span></td>
+        </tr>
+        <tr>
+            <td><img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSoQXU1gBSL4uWzqKsprY9KVtDQR5hsyCBYeIXz8n-9cw&s" alt="20 INR" height="100px" width="300px"></td>
+            <td><input type="number" id="note-20" class="currency-input" value="0" oninput="calculateTotal()"></td>
+            <td><span id="amount-20">0</span></td>
+        </tr>
+        <tr>
+            <td><img src="https://paisaboltahai.rbi.org.in/images/Rs10/10-note-front.png" alt="10 INR" height="100px" width="300px"></td>
+            <td><input type="number" id="note-10" class="currency-input" value="0" oninput="calculateTotal()"></td>
+            <td><span id="amount-10">0</span></td>
+        </tr>
+    </table>
+
+    <div class="result">
+        <p>Total Cash: <span id="total-cash">5,600</span></p>
+        <p>Total Notes: <span id="total-notes">7</span></p>
+        <p><span id="cash-in-words">five thousand six hundred</span> Only!</p>
+    </div>
+
+    <script>
+        function numberToWords(num) {
+            const lessThan20 = ['', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine', 'ten', 'eleven', 'twelve', 'thirteen', 'fourteen', 'fifteen', 'sixteen', 'seventeen', 'eighteen', 'nineteen'];
+            const tens = ['', 'ten', 'twenty', 'thirty', 'forty', 'fifty', 'sixty', 'seventy', 'eighty', 'ninety'];
+            const thousands = ['', 'thousand', 'million', 'billion'];
+
+            function helper(n) {
+                if (n === 0) return '';
+                else if (n < 20) return lessThan20[n] + ' ';
+                else if (n < 100) return tens[Math.floor(n / 10)] + ' ' + helper(n % 10);
+                else return lessThan20[Math.floor(n / 100)] + ' hundred ' + helper(n % 100);
+            }
+
+            function convertWholeNumber(num) {
+                if (num === 0) return 'zero';
+                let word = '';
+                let i = 0;
+
+                while (num > 0) {
+                    if (num % 1000 !== 0) {
+                        word = helper(num % 1000) + thousands[i] + ' ' + word;
+                    }
+                    num = Math.floor(num / 1000);
+                    i++;
+                }
+
+                return word.trim();
+            }
+
+            return convertWholeNumber(num);
+        }
+
+        function calculateTotal() {
+            const noteValues = [2000, 500, 200, 100, 50, 20, 10];
+            let totalCash = 0;
+            let totalNotes = 0;
+
+            noteValues.forEach(value => {
+                const noteCount = parseInt(document.getElementById(`note-${value}`).value) || 0;
+                totalCash += noteCount * value;
+                totalNotes += noteCount;
+                document.getElementById(`amount-${value}`).innerText = noteCount * value;
+            });
+
+            document.getElementById('total-cash').innerText = totalCash.toLocaleString();
+            document.getElementById('total-notes').innerText = totalNotes;
+            document.getElementById('cash-in-words').innerText = numberToWords(totalCash);
+        }
+
+        
+        calculateTotal();
+    </script>
+</body>
+</html>
